@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:request-config name="SFDC_Http_Request_configuration" doc:name="HTTP Request configuration" doc:id="ef806c54-619b-462f-b6b2-6fd9393f2067" >
+		<http:request-connection host="${sfdc.host}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="2b48016f-1a5c-4925-9128-14d9b8d24772" file="properties/${mule.env}-properties.yaml" />
+	<http:request-config name="Account_Http_Request_configuration" doc:name="HTTP Request configuration" doc:id="8d84f6f9-399f-47fe-8f2e-c96d29a2e255" >
+		<http:request-connection host="${account.host}" />
+	</http:request-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="bd28290d-27fa-4c8b-ae4a-7e7199bbb7e6" file="properties/${mule.env}-secure-properties.yaml" key="${mule.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="4ef2a023-80a0-438d-8928-7ede685d81ca" flowRef="mobile-accounts-eapi-main" />
+</mule>

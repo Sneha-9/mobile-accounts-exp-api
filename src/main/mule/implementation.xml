@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="create-accounts-flow" doc:id="40e36b9b-2e0a-4c61-91f7-5b20ed4b3604" >
+		<set-variable value="#[attributes.headers.correlationId]" doc:name="correlationId" doc:id="cff0df1d-446b-4eb5-b36c-8072e119ccb8" variableName="correlationId" />
+		<logger level="INFO" doc:name="LOG Start Call To Create Account" doc:id="231a8bfd-dafc-4aa5-91e1-13da5ab7ec97" message='#["Call started to create account in salesforce " ++ (vars.correlationId default "")]'/>
+		<http:request method="POST" doc:name="POST\: Call To Create Account" doc:id="9edfd55c-5753-4b17-82e8-adcf8ea3de10" path="${account.path}" config-ref="Account_Http_Request_configuration">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"correlationId" : attributes.headers.correlationId,
+	"client_secret" : p('secure::creds.client_secret'),
+	"client_id" : p('secure::creds.client_id')
+}]]]></http:headers>
+				
+		</http:request>
+		<logger level="INFO" doc:name="LOG End Call To Create Account" doc:id="9b6bd0c1-d2c8-48d8-8bbb-541d2d53177d" message='#["Call ended to create account in sfdc  " ++ (vars.correlationId default "")]'/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2e74d650-915d-4101-8179-6be1c3b8b620">
+				<ee:transform doc:name="DW Prepare Error Message" doc:id="c9b615df-2763-4ba3-b670-d1b03847268b">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"returnCode": 500,
+	"returnCodeDescription": error.muleMessage.payload.returnCodeDescription default error.description,
+	"status": "ERROR",
+	"correlationId": attributes.headers.correlationId
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="ERROR" doc:name="LOG Error" doc:id="8cf167c9-b7cf-49a1-b4c0-a20c7f52cb14" message='#["error in experience api while calling create account " ++ (vars.correlationId default "")]' />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get-accounts-flow" doc:id="2804d4c8-8a83-4a7f-adb1-1bb96f89d306" >
+		<set-variable value="#[attributes.headers.correlationId]" doc:name="correlationId" doc:id="4d1142b3-52bf-4179-9fc1-477edb47a955" variableName="correlationId" />
+		<logger level="INFO" doc:name="LOG Start Call to Fetch Account Details From SFDC" doc:id="c6ed597c-d4b0-465f-b8b7-b7b3ccee2cf3" message='#["Call started to fetch account details from sfdc " ++ (vars.correlationId default "")]'/>
+		<http:request method="GET" doc:name="GET\: Call to Fetch Account Details" doc:id="76b8255d-7d5f-4638-8aa5-54a2ce31858a" path="${sfdc.path}/{accountId}" config-ref="SFDC_Http_Request_configuration">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"correlationId" : attributes.headers.correlationId,
+	"client_secret" : p('secure::creds.client_secret'),
+	"client_id" : p('secure::creds.client_id')
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.uriParams.accountId
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="DW Prepare Account Details Payload" doc:id="9ff7ef1e-0d09-4468-ab4b-0ccd0c557914" >
+			<ee:message >
+				<ee:set-payload resource="dwlfiles/getAccountDetails.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="LOG End Call To Fetch Account Details From SFDC" doc:id="f9321451-c765-4463-982f-c2675eab58eb" message='#["Call ended to fetch account details from sfdc  " ++ (vars.correlationId default "")]'/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ac3e4082-3a15-4a62-9a97-bb389cc17de7" >
+				<ee:transform doc:name="DW Prepare Error Message" doc:id="70b50d6b-c0c0-49fe-9635-732b24bc34ab" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"returnCode": 500,
+	"returnCodeDescription": error.muleMessage.payload.returnCodeDescription default error.description,
+	"status": "ERROR",
+	"correlationId": attributes.headers.correlationId
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="ERROR" doc:name="LOG Error" doc:id="7b3d2da1-d155-4662-8c58-002f7efaf193" message='#["error in experience api while calling create account "]'/>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

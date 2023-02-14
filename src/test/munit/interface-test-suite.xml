@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="interface-test-suite.xml" />
+	<munit:test name="interface-not-found-testcase" doc:id="35150983-c9ce-4a8e-b1e8-d79001f07eee" description="Test" expectedErrorType="APIKIT:NOT_FOUND">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock APIKIT Router" doc:id="499edddb-759c-48e4-b838-c2a1448ff940" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mobile-accounts-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://errorResponses/404errorMessage.dwl')]" />
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mobile-accounts-eapi-main" doc:id="2f461d2a-60a3-4b0d-9523-0a65f3ff8829" name="mobile-accounts-eapi-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="0dba9f9a-ae3a-46d0-bfb8-378d41a77135" expression="#[payload.returnCode]" is="#[MunitTools::equalTo(404)]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-bad-request-testcase" doc:id="2a6f2d90-bab4-4d42-ac95-7ab1a532ba1a" description="Test" expectedErrorType="APIKIT:BAD_REQUEST">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock APIKIT Router" doc:id="65677b53-b294-4900-a904-8b4cfeb5eaaf" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mobile-accounts-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://errorResponses/400errorMessage.dwl')]" />
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="Flow-ref to mobile-accounts-eapi-main" doc:id="2d170dbd-21db-4695-b155-5867b17cb81a" name="mobile-accounts-eapi-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="b6291888-aa21-4190-a658-7468b33ff897" expression="#[payload.returnCode]" is="#[MunitTools::equalTo(400)]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="interface-mthod-notallowed-testcase" doc:id="cfedad64-b07e-4855-9f1f-de5758470fa0" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock APIKIT Router" doc:id="5a9bc8bc-dd93-423e-b0f6-a538ce6a6972" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mobile-accounts-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://errorResponses/405errorMessage.dwl')]" />
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="Flow-ref to mobile-accounts-eapi-main" doc:id="603cf481-0a25-46a3-864c-f49e3f1afb6a" name="mobile-accounts-eapi-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="49c231ca-f972-42b9-aeaa-e35477ecb3fd" expression="#[payload.returnCode]" is="#[MunitTools::equalTo(405)]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="interface-not-acceptable-testcase" doc:id="c27d5986-1725-4871-8acf-e1739e65436a" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock APIKIT Router" doc:id="fc1fc9bf-dbf2-4266-8de6-e3eef019b915" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mobile-accounts-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://errorResponses/406errorMessage.dwl')]" />
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="Flow-ref to mobile-accounts-eapi-main" doc:id="3c30f8b2-a9ea-470c-b46f-a0695f88ca2f" name="mobile-accounts-eapi-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="01430672-fea8-4a3f-ab41-b2b602f4ebde" expression="#[payload.returnCode]" is="#[MunitTools::equalTo(406)]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="interface-unsuported-mediatype-testcase" doc:id="8d15de33-9e77-4b4b-b98f-c0eb0c1fd8d6" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock APIKIT Router" doc:id="7f0670a0-44b3-422d-9f94-afaf9d3d4275" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mobile-accounts-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://errorResponses/415errorMessage.dwl')]" />
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="Flow-ref to mobile-accounts-eapi-main" doc:id="093485e2-9c51-4818-8ca5-3276572741ad" name="mobile-accounts-eapi-main" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="75c905b9-5552-47b5-99dc-936aab0e46c0" expression="#[payload.returnCode]" is="#[MunitTools::equalTo(415)]" />
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

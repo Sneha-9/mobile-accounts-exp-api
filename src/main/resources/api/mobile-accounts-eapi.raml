@@ -1,0 +1,30 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/aa4bf431-65ac-48e7-9162-d0e9f54c05ee # 
+
+
+title: Mobile Accounts Experience API
+version: v1
+
+description: This api will e triggered by consumer channel to create or fetch account details 
+
+resourceTypes:
+  accountCreateDetails : !include /resourceType/accountCreateResourceType.raml
+  accountGetDetails: !include /resourceType/accountGetResourceType.raml
+
+traits:
+  errorTraits: !include   /traits/errorResponsesTrait.raml
+  headersTraits: !include /traits/apiHeadersTrait.raml
+
+
+
+/accounts:
+  displayName: Accounts
+  description: This resource is used to create account in Salesforce
+  type: accountCreateDetails  
+
+  /{accountId}:
+    displayName: Account Id
+    description: This resource is used to retrieve account details from Salesforce
+    type: accountGetDetails
+
+

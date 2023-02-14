@@ -1,0 +1,10 @@
+#%RAML 1.0 ResourceType
+get:
+  displayName: Retrieve Account Details
+  description: This method is used to get the details of account created
+  responses:
+    200:
+      body:
+        application/json:
+          example: !include ../examples/accountGetDetails.json
+            

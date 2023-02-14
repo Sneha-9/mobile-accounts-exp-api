@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-test-suite.xml" />
+	<munit:test name="creat-account-success-testcase" doc:id="c4bfe5f1-65a4-42ff-a411-be23fac9b1d0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Create account Call" doc:id="dc199090-e74b-4ee7-aefd-125fc707b749" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9edfd55c-5753-4b17-82e8-adcf8ea3de10" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input" doc:id="6e884a16-21e6-44fa-9cb4-f7dc239fe53b" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://createAccountResources/createAccountRequest.json')]" />
+				<munit:attributes value='#[{"headers" : {"client_id" : "123", "client_secret" : "123", "correlationId" : "123"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to create-accounts-flow" doc:id="29c2c7f7-b8ed-40af-bb2d-0cda7d2e333c" name="create-accounts-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="aded0eaf-7d4b-4d8d-a4d3-ca6610da8527" processor="logger" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="LOG End Call To Create Account" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="Create-account-error-testcase" doc:id="773b4b15-1fac-4c4a-8b69-8aada4afbf11" description="Test" expectedErrorType="ANY">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock Create account Call" doc:id="b8b6c8d8-2e98-475a-be6a-45aa650051b6" processor="http:request">
+					<munit-tools:with-attributes>
+						<munit-tools:with-attribute whereValue="9edfd55c-5753-4b17-82e8-adcf8ea3de10" attributeName="doc:id" />
+					</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="Set Input" doc:id="e6e357b8-cd73-4114-8f45-1d3c5c423ea6">
+					<munit:payload value="#[output application/json --- readUrl('classpath://createAccountResources/createAccountRequest.json')]" />
+					<munit:attributes value='#[{"headers" : {"client_id" : "123", "client_secret" : "123", "correlationId" : "123"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="Refer to create-accounts-flow" doc:id="d2c2bd6c-3913-4660-b0d8-1f53348960da" name="create-accounts-flow" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="Verify call" doc:id="9dcc70db-6982-4436-8c02-1ea585c2c43b" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8cf167c9-b7cf-49a1-b4c0-a20c7f52cb14" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="get-account-success-testcase" doc:id="d857d945-3491-4e2e-b7e5-84b71a24f032" description="Test">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock Get Account Call" doc:id="c07e9ced-6702-4b14-b43a-a1ff9992f724" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="76b8255d-7d5f-4638-8aa5-54a2ce31858a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="Set Input" doc:id="534e3982-f22f-4c68-9433-26ca53d04024">
+				<munit:payload value="#[output application/json --- readUrl('classpath://createAccountResources/createAccountRequest.json')]" />
+				<munit:attributes value='#[{"headers" : {"client_id" : "123", "client_secret" : "123", "correlationId" : "123"},"uriParams": "accountId" : "123"}]' />
+				</munit:set-event>
+				<flow-ref doc:name="Refer to get-accounts-flow" doc:id="1ba5e2e0-6bf4-40b4-8f7b-8c160f2cc59d" name="get-accounts-flow" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="Verify call" doc:id="2919cd30-5337-43a6-84ab-5c91a19f8049" processor="logger" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f9321451-c765-4463-982f-c2675eab58eb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="Get-account-error-testcase" doc:id="f6e1da93-e2aa-4e5b-ac04-cf327275d89c" description="Test" expectedErrorType="ANY">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock Get account Call" doc:id="1428a820-c6e3-4c6e-be5c-42778f10e002" processor="http:request">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="76b8255d-7d5f-4638-8aa5-54a2ce31858a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+						<munit-tools:error typeId="ANY" />
+					</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<munit:set-event doc:name="Set Input" doc:id="26356cf1-2677-4195-888c-906024e4f7b5">
+					<munit:payload value="#[output application/json --- readUrl('classpath://createAccountResources/createAccountRequest.json')]" />
+					<munit:attributes value='#[{"headers" : {"client_id" : "123", "client_secret" : "123", "correlationId" : "123"}}]' />
+				</munit:set-event>
+				<flow-ref doc:name="Refer to get-accounts-flow" doc:id="2313a652-ba99-4ae3-a66d-ce9def043040" name="get-accounts-flow" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:verify-call doc:name="Verify call" doc:id="25bcf216-4e2a-45ef-9825-b2daf557050d" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7b3d2da1-d155-4662-8c58-002f7efaf193" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				</munit-tools:verify-call>
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

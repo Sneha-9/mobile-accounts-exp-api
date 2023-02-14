@@ -1,0 +1,14 @@
+{
+  "name": "janu",
+  "email": "abc123@xyz.com",
+  "number": "1019",
+  "phone": "90312893213",
+  "fax": "21312311",
+  "billingAddress": {
+    "street": "High Street",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "postalCode": "500089",
+    "countryIso": "IN"
+  }
+}

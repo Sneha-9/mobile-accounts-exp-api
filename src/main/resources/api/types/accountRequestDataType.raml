@@ -1,0 +1,105 @@
+#%RAML 1.0 DataType
+
+type: 
+  properties:
+    name: 
+      displayName: Account Name 
+      description: Name of the account
+      type: string
+      required: true
+      pattern: ^[a-zA-Z0-9 ]*$ 
+    email:
+      displayName: Email 
+      description: Email of the account
+      type: string
+      required: true
+    number:
+      displayName: Account Number 
+      description:  number that belongs to the account
+      type: string
+      required: false
+    phone:
+      displayName: Phone Number 
+      description: phone number that belongs to the account
+      type: string
+      required: false
+    fax:
+      displayName: Account Fax Number
+      description: Fax number that belongs to the account
+      type: string
+      required: false
+    billingAddress:
+      displayName: Account's Billing Address
+      description: Billing address of account
+      type: object
+      required: false
+      properties:
+        street:
+          displayName: Street Name
+          description: Street Name of the billing address
+          type: string
+          required: false
+        city:
+          displayName: City Name
+          description: City Name of the billing address
+          type: string
+          required: false
+        state:
+          displayName: State Name
+          description: State Name of the billing address
+          type: string
+          required: false
+        postalCode:
+          displayName: Postal Code
+          description: Postal Code of the billing address
+          type: string
+          required: false
+        countryIso:
+          displayName: CountryIso Code
+          description: CountryIso Code of the billing address
+          type: string
+          required: false  
+    shippingAddress:
+      displayName: Account's Shipping Address
+      description: Shipping address of account
+      type: object
+      required: false
+      properties:
+        street:
+          displayName: Street Name
+          description: Street Name of the shipping address
+          type: string
+          required: false
+        city:
+          displayName: City Name
+          description: City Name of the shipping address
+          type: string
+          required: false
+        state:
+          displayName: State Name
+          description: State Name of the shipping address
+          type: string
+          required: false
+        postalCode:
+          displayName: Postal Code
+          description: Postal Code of the shipping address
+          type: string
+          required: false
+        countryIso:
+          displayName: CountryIso Code
+          description: CountryIso Code of the shipping address
+          type: string
+          required: false          
+
+
+          
+
+
+
+
+       
+     
+     
+      
+
+    
