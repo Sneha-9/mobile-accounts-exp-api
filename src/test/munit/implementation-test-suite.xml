@@ -63,6 +63,9 @@
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="76b8255d-7d5f-4638-8aa5-54a2ce31858a" attributeName="doc:id" />
 				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://getAccountResources/getAccountDetails.json')]" />
+				</munit-tools:then-return>
 				</munit-tools:mock-when>
 			</munit:behavior>
 			<munit:execution>
